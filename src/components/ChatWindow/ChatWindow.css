@@ -44,6 +44,8 @@ aside.EmojiPickerReact{
     align-items:center;
     cursor:pointer;
     border-radius:50%;
+    overflow:hidden;
+    transition: all ease 0.3s;
 }
 
 .chatWindow-body{
