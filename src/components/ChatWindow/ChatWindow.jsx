@@ -8,20 +8,55 @@ import Send from '@material-ui/icons/Send';
 import Mic from '@material-ui/icons/Mic';
 import EmojiPicker from 'emoji-picker-react';
 import { useState } from 'react';
-import { width } from '@mui/system';
+
 
 export default () => {
-    const [emojiOpen, setEmojiOpen ] = useState(false)
+    
+    //funcionamento microfone
+    let recognition = null;
+    let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition !== undefined) {
+        recognition = new SpeechRecognition()
+    }
 
-    handleOpenEmoji = () =>{
+
+
+
+    const [emojiOpen, setEmojiOpen ] = useState(false)
+    const [text, setText] = useState("")
+    const [listening, setListening] = useState(false)
+
+    const handleEmojiClick = (e, emojiObject) =>{
+        setText( text + emojiObject.emoji)
+    
+    }
+
+    const handleOpenEmoji = () =>{
         setEmojiOpen(true)
     }
-    handleCloseEmoji = () =>{
+    const handleCloseEmoji = () =>{
         setEmojiOpen(false)
     }
 
-    const handleEmojiClick = () =>{
-        
+
+    const handleMicClick = () =>{
+        if(recognition !== null){
+            recognition.onstart = () =>{
+                setListening(true)
+            }
+            recognition.onend = () =>{
+                setListening(false)
+            }
+            recognition.onresult = () =>{
+                setText(e.results[0][0].transcript)
+            }
+
+            recognition.start()
+        }
+    }
+
+    const handleSendClick = () =>{
+
     }
 
 
@@ -54,12 +89,28 @@ export default () => {
                 
             </div>
 
-            <div className='chatWindow-emojiarea' style={{height: emojiOpen? '200px' : '0px'}}>
+            <div className='chatWindow-emojiarea' style={{height: emojiOpen? "200px" : "0px"}}>
                 <EmojiPicker
+                    
                     onEmojiClick={handleEmojiClick}
-                    searchDisabled
-                    skinTonesDisabled
-                    width={auto}
+                    disableSkinTonePicker
+                    disableSearchBar
+                    pickerStyle={{ width: '100%', height: '200px' }}
+                    groupNames={{
+                        smileys_people: '',
+                        animals_nature: '',
+                        food_drink: '',
+                        travel_places: '',
+                        activities: '',
+                        objects: '',
+                        symbols: '',
+                        flags: '',
+                        recently_used: ''
+                      }}
+                    groupVisibility={{
+                        flags: false,
+                        recently_used:false
+                      }}
                     
                     
                 />
@@ -87,14 +138,25 @@ export default () => {
                     <input 
                     className='chatWindow-input' 
                     type="text"
-                    placeholder='Digite uma mensagem'  />
+                    placeholder='Digite uma mensagem' 
+                    value={text}
+                    onChange={(e)=>setText(e.target.value)} />
                 </div>
 
 
                 <div className='chatWindow-pos'>
-                    <div className='chatWindow-btn'>
-                        <Send style={{color: '#919191'}}/>
-                    </div>
+                    {text === '' &&
+                        <div onClick={handleMicClick}  className='chatWindow-btn'>
+                            <Mic style={{color: listening ? '#126ece' : '#919191'}}/>
+                        </div>
+                        }
+                    {text !== '' &&
+                        <div onClick={handleSendClick} className='chatWindow-btn'>
+                            <Send style={{color: '#919191'}}/>
+                        </div>
+                        }
+
+
                 </div>
             </div>
         </div>

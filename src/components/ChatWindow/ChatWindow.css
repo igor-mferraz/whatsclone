@@ -87,11 +87,12 @@ aside.EmojiPickerReact{
 
 .chatWindow-emojiarea{
     height:200px;
+    width: 100%;
     overflow-y:hidden;
     transition: all ease 0.3s;
 }
 
-aside.EmojiPickerReact{
-    width: 100%;
+aside.emoji-picker-react{
+    width: auto;
     background:none;
 }
