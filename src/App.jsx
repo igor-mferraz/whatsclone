@@ -8,6 +8,7 @@ import { useState } from "react";
 import ChatIntro from "./components/ChatIntro/ChatIntro";
 import ChatWindow from "./components/ChatWindow/ChatWindow";
 import ChatListItem from "./components/ChatListItem/ChatListItem";
+import NewChat from "./components/NewChat/NewChat";
 
 
 export default () => {
@@ -37,24 +38,43 @@ export default () => {
 
 
     const [activeChat, setActiveChat] = useState([{}])
+    const [user, setUser] = useState({
+        id:1234,
+        avatar:'https://www.w3schools.com/howto/img_avatar2.png',
+        name: 'igor ferraz'
+    })
+    const [showNewChat,setShowNewChat] = useState(false);
 
-
+    const handleNewChat = () =>{
+        setShowNewChat(true)
+    }
     return (
         <div className="app-window">
             <div className="sidebar">
+                <NewChat
+                    
+                    user={user}
+                    show={showNewChat}
+                    setShow={setShowNewChat}
+                />
                 <header>
-                    <img className="header-avatar" src="https://www.w3schools.com/howto/img_avatar2.png" alt="" />
+                    <img className="header-avatar" src={user.avatar} alt="" />
                     <div className="header-buttons">
                         <div className="header-btn">
-                            <DonutLargeIcon 
+                            <DonutLargeIcon
                             style={{color:'#919191'}}/>
+                        </div> 
 
+                        <div onClick={handleNewChat} className="header-btn">
                             <ChatIcon 
                             style= {{color:'#919191'}}/>
+                        </div> 
 
+                        <div className="header-btn">
                             <MoreVertIcon 
                             style= {{color:'#919191'}}/>
-                        </div>
+                        </div> 
+
                     </div>
                 </header>
 
@@ -83,7 +103,9 @@ export default () => {
             <div className="contentarea">
                 
                 {activeChat.chatId !== undefined &&
-                    <ChatWindow/>
+                    <ChatWindow
+                        user={user}
+                    />
                 }
                 {activeChat.chatId === undefined &&
                     <ChatIntro/>

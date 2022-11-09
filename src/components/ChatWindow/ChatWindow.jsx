@@ -7,11 +7,16 @@ import Close from '@material-ui/icons/Close';
 import Send from '@material-ui/icons/Send';
 import Mic from '@material-ui/icons/Mic';
 import EmojiPicker from 'emoji-picker-react';
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
+import MenssageItem from '../MenssageItem/MenssageItem';
+import { useRef } from 'react';
 
 
-export default () => {
+export default ({user}) => {
     
+    
+
     //funcionamento microfone
     let recognition = null;
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -25,6 +30,40 @@ export default () => {
     const [emojiOpen, setEmojiOpen ] = useState(false)
     const [text, setText] = useState("")
     const [listening, setListening] = useState(false)
+    const [list, setList] = useState([
+        {author: 123, body:'bla bla bla'},
+        {author: 123, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 123, body:'bla bla bla'},
+        {author: 123, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 123, body:'bla bla bla'},
+        {author: 123, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 123, body:'bla bla bla'},
+        {author: 123, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 123, body:'bla bla bla'},
+        {author: 123, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 123, body:'bla bla bla'},
+        {author: 123, body: 'lorem bla bla'},
+        {author: 1234, body: 'lorem bla bla'},
+        {author: 123, body: 'lorem bla bla'}])
+
+
+
+    const body = useRef()
+    useEffect(() => {
+        if(body.current.scrollHeight > body.current.offsetHeight) {
+            body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
+        }
+    }, [list]);
 
     const handleEmojiClick = (e, emojiObject) =>{
         setText( text + emojiObject.emoji)
@@ -85,8 +124,14 @@ export default () => {
             </div>
 
 
-            <div className='chatWindow-body'>
-                
+            <div ref={body} className='chatWindow-body'>
+                {list.map((item,key)=>(
+                    <MenssageItem
+                        key={key}
+                        data={item}
+                        user={user}
+                    />
+                ))}
             </div>
 
             <div className='chatWindow-emojiarea' style={{height: emojiOpen? "200px" : "0px"}}>
